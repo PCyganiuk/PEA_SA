@@ -7,6 +7,7 @@
 TSP::TSP() {
     n = 0;
 }
+TSP::~TSP() = default;
 
 void TSP::readFromFile(const string& filename) {
     fstream p;
@@ -38,22 +39,33 @@ void TSP::displayMatrix() {
 }
 
 void TSP::shuffleSol(int begin, int end,vector<int>& sol) {
+    random_device rd;
+    mt19937 g(rd());
+    shuffle(sol.begin()+begin,sol.end()-end-1,g);
+}
 
+int TSP::calcCost(vector<int> &path) {
+    int cost = 0;
+    for (int i = 0; i < path.size(); i++) {
+        cost += graph[i][path[i + 1]];
+    }
+    return cost;
 }
 
 int TSP::sa() {
-    random_device rd;
-    mt19937 g(rd());
     int shtsPath = INT_MAX;
-    vector<int> solRand(graph.size());
+    int cPath = 0;
+    list<int> sol;
+    vector<int> vertRand(graph.size());
     float iniTemp = 100.0;
     float coolRate = 0.5;
     for(int i = 1 ; i < graph.size();i++){
-        solRand[i - 1] = i;
+        vertRand[i - 1] = i;
     }
-    solRand[graph.size() - 1]=0;
-    shuffle(solRand.begin(),solRand.end()-1,g);
+    vertRand[graph.size() - 1]=0;
+    shuffleSol(0, 0, vertRand);
+    cPath = calcCost(vertRand);
+    sPath.resize(cPath);
 
     return shtsPath;
 }
-

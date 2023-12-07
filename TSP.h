@@ -24,11 +24,13 @@ private:
     int n;
     vector<vector<int>> graph;
 public:
-    stack<int>path;
+    vector<int> sPath;
     TSP();
+    ~TSP();
     void readFromFile(const string& filename);
     int sa();
-    void shuffleSol(int begin,int end, vector<int>& tab);
+    void shuffleSol(int begin,int end, vector<int> & tab);
+    int calcCost(vector<int> & path );
     void displayMatrix();
 };
 
