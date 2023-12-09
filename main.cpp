@@ -64,6 +64,9 @@ int main() {
     int optPath = 212;
     int vert[10] = {3, 4, 2, 8, 7, 6, 9, 1, 5, 0};
     int path = Graph.sa();
+    cout<<path<<endl;
+    for(int i = 0;i<Graph.sPath.size();i++)
+        cout<<Graph.sPath[i]<<" ";
     return 0;
 }
 
