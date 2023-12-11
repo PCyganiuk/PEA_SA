@@ -57,13 +57,12 @@ int TSP::sa() {
     random_device rd;
     mt19937 g(rd());
     uniform_real_distribution<double> num(0.0,1.0);
-    uniform_int_distribution<int> node(1,n-1);
+    uniform_int_distribution<int> node(0,n-2);
     int L = n * n;
     int bestCost = INT_MAX;
     int cCost;
-    list<int> sol;
     vector<int> vertRand(graph.size());
-    double temp = 200.0;
+    double temp = 2000.0;
     for(int i = 1 ; i < graph.size();i++){
         vertRand[i - 1] = i;
     }
@@ -75,7 +74,7 @@ int TSP::sa() {
     int war = 0;
     int oldCurCost = -1;
 
-    while(war < 9){
+    while(war < 90){
         for(int t = 0; t < L; t++){
 
             vector<int> sasiad(vertRand);
