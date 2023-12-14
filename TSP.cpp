@@ -58,11 +58,13 @@ int TSP::sa() {
     mt19937 g(rd());
     uniform_real_distribution<double> num(0.0,1.0);
     uniform_int_distribution<int> node(0,n-2);
-    int L = n * n;
+    int L = (n * n)/2; // długość epoki
     int bestCost = INT_MAX;
+    float alfa = 0.98;
+    int stop_war = 100;
     int cCost;
     vector<int> vertRand(graph.size());
-    double temp = 2000.0;
+    double temp = calcInitTemp(); // temperatura
     for(int i = 1 ; i < graph.size();i++){
         vertRand[i - 1] = i;
     }
@@ -72,9 +74,10 @@ int TSP::sa() {
     sPath.assign(vertRand.begin(),vertRand.end());
     bestCost = cCost;
     int war = 0;
+    //int k = 0;
     int oldCurCost = -1;
 
-    while(war < 90){
+    while(war < stop_war){ // warunek końcowy
         for(int t = 0; t < L; t++){
 
             vector<int> sasiad(vertRand);
@@ -106,8 +109,38 @@ int TSP::sa() {
                 war = 0;
         }
         oldCurCost = cCost;
-        temp = 0.98 * temp;
+        //k++;
+        temp = alfa * temp; // chłodzenie pierwsze
+        //temp = (temp / (1 + log10(k))); //liniowe
     }
 
     return bestCost;
+}
+
+double TSP::calcInitTemp() {
+    std::random_device rd;
+    std::mt19937 g(rd());
+    std::uniform_int_distribution<int> d(0, n-2);
+
+    vector<int> path(n);
+    for(int i = 1 ; i < n;i++){
+        path[i - 1] = i;
+    }
+    path[n - 1]=0;
+
+    int delta = 0;
+    int N = 10000;
+    for(int i = 0;i < N;i++){
+        shuffle(path.begin()+1 ,path.end()-1, g);
+        int cost = calcCost(path);
+        int a = d(rd); int b = d(rd);
+        while (a == b)
+            a = d(rd);
+        iter_swap(path.begin() + a, path.begin() + b);
+        int cost2 = calcCost(path);
+        delta += abs(cost - cost2);
+    }
+    delta /= N;
+    double temp =  -( (double) delta / (double) log(0.95) ); //0.95
+    return temp;
 }

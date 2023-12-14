@@ -28,6 +28,7 @@ public:
     TSP();
     ~TSP();
     void readFromFile(const string& filename);
+    double calcInitTemp();
     int sa();
     static void shuffleSol(int begin,int end, vector<int> & tab);
     int calcCost(vector<int> path );

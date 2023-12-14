@@ -51,7 +51,7 @@ int main() {
         pcFreq.QuadPart = freq.QuadPart / 1000000;//microseconds
         TSP Graph;
         Graph.readFromFile(fileNames.front().name);
-        Graph.displayMatrix();
+        //Graph.displayMatrix();
         for (int j = 0; j < fileNames.front().times; j++) {
             QueryPerformanceCounter(&sTime);
             path = Graph.sa();
