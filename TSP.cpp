@@ -58,6 +58,7 @@ int TSP::sa() {
     mt19937 g(rd());
     uniform_real_distribution<double> num(0.0,1.0);
     uniform_int_distribution<int> node(0,n-2);
+    uniform_int_distribution<int> invertRand(0,1);
     int L = (n * n)/2; // długość epoki
     int bestCost = INT_MAX;
     float alfa = 0.98;
@@ -82,10 +83,19 @@ int TSP::sa() {
 
             vector<int> sasiad(vertRand);
             int a = node(rd);
+            /* // 2-swap
             int b = node(rd);
             while(a == b)
                 a = node(rd);
             iter_swap(sasiad.begin() + a, sasiad.begin() + b);
+             */
+            // invert
+            if(a == 0)
+                iter_swap(sasiad.begin() + a, sasiad.begin() + a+1);
+            else if(a == n-2)
+                iter_swap(sasiad.begin() + a, sasiad.begin() + a-1);
+            else
+                iter_swap(sasiad.begin() + a, sasiad.begin() + a+ (invertRand(rd)*2) -1);
             int sasiad_cost = calcCost(sasiad);
             if(sasiad_cost <= bestCost){
                 bestCost = sasiad_cost;
@@ -111,7 +121,8 @@ int TSP::sa() {
         oldCurCost = cCost;
         //k++;
         temp = alfa * temp; // chłodzenie pierwsze
-        //temp = (temp / (1 + log10(k))); //liniowe
+        //temp = (temp / (1 + log10(k))); //wykładnicze
+        //temp = temp - alfa; // liniowe
     }
 
     return bestCost;
